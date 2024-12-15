@@ -9,34 +9,56 @@ import java.time.temporal.ChronoUnit;
 
 public class Main {
     private static final List<String> availableHotels = new ArrayList<>(Arrays.asList(
-            "Hotel Buenos Aires 1, Buenos Aires, Hotel, 2023-12-01, 2023-12-10, 1, 2, 1, 5, 100",
-            "Hotel Buenos Aires 2, Buenos Aires, Hotel, 2023-12-01, 2023-12-10, 1, 2, 1, 4, 80",
-            "Apartamento Buenos Aires 1, Buenos Aires, Apartamento, 2023-12-01, 2023-12-10, 1, 2, 1, 3, 60",
-            "Finca Buenos Aires 1, Buenos Aires, Finca, 2023-12-01, 2023-12-10, 1, 2, 1, 4, 90",
-            "Dia de Sol Buenos Aires 1, Buenos Aires, Dia de Sol, 2023-12-01, 2023-12-10, 1, 2, 1, 5, 120",
-            "Hotel Madrid 1, Madrid, Hotel, 2023-12-01, 2023-12-10, 1, 2, 1, 5, 110",
-            "Hotel Madrid 2, Madrid, Hotel, 2023-12-01, 2023-12-10, 1, 2, 1, 4, 90",
-            "Apartamento Madrid 1, Madrid, Apartamento, 2023-12-01, 2023-12-10, 1, 2, 1, 3, 70",
-            "Finca Madrid 1, Madrid, Finca, 2023-12-01, 2023-12-10, 1, 2, 1, 4, 100",
-            "Dia de Sol Madrid 1, Madrid, Dia de Sol, 2023-12-01, 2023-12-10, 1, 2, 1, 5, 130",
-            "Hotel Paris 1, Paris, Hotel, 2023-12-01, 2023-12-10, 1, 2, 1, 5, 120",
-            "Hotel Paris 2, Paris, Hotel, 2023-12-01, 2023-12-10, 1, 2, 1, 4, 100",
-            "Apartamento Paris 1, Paris, Apartamento, 2023-12-01, 2023-12-10, 1, 2, 1, 3, 80",
-            "Finca Paris 1, Paris, Finca, 2023-12-01, 2023-12-10, 1, 2, 1, 4, 110",
-            "Dia de Sol Paris 1, Paris, Dia de Sol, 2023-12-01, 2023-12-10, 1, 2, 1, 5, 140",
-            "Hotel New York 1, New York, Hotel, 2023-12-01, 2023-12-10, 1, 2, 1, 5, 150",
-            "Hotel New York 2, New York, Hotel, 2023-12-01, 2023-12-10, 1, 2, 1, 4, 130",
-            "Apartamento New York 1, New York, Apartamento, 2023-12-01, 2023-12-10, 1, 2, 1, 3, 100",
-            "Finca New York 1, New York, Finca, 2023-12-01, 2023-12-10, 1, 2, 1, 4, 140",
-            "Dia de Sol New York 1, New York, Dia de Sol, 2023-12-01, 2023-12-10, 1, 2, 1, 5, 160",
-            "Hotel Tokyo 1, Tokyo, Hotel, 2023-12-01, 2023-12-10, 1, 2, 1, 5, 170",
-            "Hotel Tokyo 2, Tokyo, Hotel, 2023-12-01, 2023-12-10, 1, 2, 1, 4, 150",
-            "Apartamento Tokyo 1, Tokyo, Apartamento, 2023-12-01, 2023-12-10, 1, 2, 1, 3, 120",
-            "Finca Tokyo 1, Tokyo, Finca, 2023-12-01, 2023-12-10, 1, 2, 1, 4, 160",
-            "Dia de Sol Tokyo 1, Tokyo, Dia de Sol, 2023-12-01, 2023-12-10, 1, 2, 1, 5, 180"
+            "Hotel Buenos Aires 1, Buenos Aires, Hotel, 2023-12-01, 2023-12-10, 1, 2, 1, 5, 100, 50, 10, 100, 20",
+            "Hotel Buenos Aires 2, Buenos Aires, Hotel, 2023-12-01, 2023-12-10, 1, 2, 1, 4, 80, 40, 5, 80, 10",
+            "Apartamento Buenos Aires 1, Buenos Aires, Apartamento, 2023-12-01, 2023-12-10, 1, 2, 1, 3, 60, 30, 3, 60, 5",
+            "Finca Buenos Aires 1, Buenos Aires, Finca, 2023-12-01, 2023-12-10, 1, 2, 1, 4, 90, 20, 2, 40, 8",
+            "Dia de Sol Buenos Aires 1, Buenos Aires, Dia de Sol, 2023-12-01, 2023-12-10, 1, 2, 1, 5, 120, 10, 1, 20, 2"
+    ));
+
+    private static final List<String> availableRooms = new ArrayList<>(Arrays.asList(
+            "Hotel Buenos Aires 1, 2023-12-01, 2023-12-10, 1, 2, 1, Habitación Doble, 2 camas dobles, vista al mar, aire acondicionado, cafetera, TV de pantalla plana, ducha, escritorio, 100",
+            "Hotel Buenos Aires 1, 2023-12-01, 2023-12-10, 1, 2, 1, Habitación Suite, 1 cama king, vista al mar, aire acondicionado, cafetera, TV de pantalla plana, ducha, escritorio, 200",
+            "Hotel Buenos Aires 2, 2023-12-01, 2023-12-10, 1, 2, 1, Habitación Doble, 2 camas dobles, vista al mar, aire acondicionado, cafetera, TV de pantalla plana, ducha, escritorio, 80",
+            "Hotel Madrid 1, 2023-12-01, 2023-12-10, 1, 2, 1, Habitación Doble, 2 camas dobles, vista al mar, aire acondicionado, cafetera, TV de pantalla plana, ducha, escritorio, 110",
+            "Hotel Madrid 1, 2023-12-01, 2023-12-10, 1, 2, 1, Habitación Suite, 1 cama king, vista al mar, aire acondicionado, cafetera, TV de pantalla plana, ducha, escritorio, 220"
     ));
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        boolean exit = false;
+
+        while (!exit) {
+            System.out.println("Seleccione una opción:");
+            System.out.println("1. Buscar hoteles");
+            System.out.println("2. Reservar habitación");
+            System.out.println("3. Confirmar habitaciones");
+            System.out.println("4. Salir");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    findHotels();
+                    break;
+                case 2:
+                    bookRoom();
+                    break;
+                case 3:
+                    confirmRooms();
+                    break;
+                case 4:
+                    exit = true;
+                    break;
+                default:
+                    System.out.println("Opción inválida. Intente de nuevo.");
+            }
+        }
+
+        scanner.close();
+    }
+
+    private static void findHotels() {
         Scanner scanner = new Scanner(System.in);
 
         String city = selectCity(scanner);
@@ -70,8 +92,6 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        scanner.close();
     }
 
     private static String selectCity(Scanner scanner) {
@@ -123,24 +143,53 @@ public class Main {
         for (String hotel : availableHotels) {
             String[] hotelDetails = hotel.split(", ");
             if (isMatchingHotel(hotelDetails, city, accommodationType, startDate, endDate, adults, children, rooms)) {
-                int days = calculateDays(startDate, endDate);
-                int pricePerNight = Integer.parseInt(hotelDetails[9]);
-                int totalPrice = calculateTotalPrice(days, pricePerNight, rooms);
-                double discountOrIncrease = calculateDiscountOrIncrease(startDate, endDate, totalPrice);
+                int totalCapacity = Integer.parseInt(hotelDetails[12]);
+                int currentOccupancy = Integer.parseInt(hotelDetails[13]);
+                int availableCapacity = totalCapacity - currentOccupancy;
+                int requiredCapacity = (adults + children) * rooms;
 
-                if (accommodationType.equals("Dia de Sol")) {
-                    String activities = "Actividades: Natación, Tomar el sol, Voleibol de playa";
-                    String meals = "Incluye: Almuerzo y refrigerios";
-                    matchingHotels.add(String.format("Nombre: %s, Calificación: %s, Precio por día: %d, Precio total: %.2f, Descuento/Aumento: %.2f, %s, %s",
-                            hotelDetails[0], hotelDetails[8], pricePerNight, (double) totalPrice, discountOrIncrease, activities, meals));
-                } else {
-                    matchingHotels.add(String.format("Nombre: %s, Calificación: %s, Precio por noche: %d, Precio total: %.2f, Descuento/Aumento: %.2f",
-                            hotelDetails[0], hotelDetails[8], pricePerNight, (double) totalPrice, discountOrIncrease));
+                if (availableCapacity >= requiredCapacity) {
+                    int availableRooms = Integer.parseInt(hotelDetails[10]) - Integer.parseInt(hotelDetails[11]);
+                    int price = findLowestPrice(hotelDetails[0]);
+                    double totalPrice = calculateTotalPrice(price, startDate, endDate, rooms);
+                    matchingHotels.add(String.format("Nombre: %s, Calificación: %s, Precio por noche: %d, Precio total: %.2f, Habitaciones disponibles: %d, Capacidad disponible: %d",
+                            hotelDetails[0], hotelDetails[8], price, totalPrice, availableRooms, availableCapacity));
                 }
             }
         }
 
         return matchingHotels;
+    }
+
+    private static int findLowestPrice(String hotelName) {
+        int lowestPrice = Integer.MAX_VALUE;
+        for (String room : availableRooms) {
+            String[] roomDetails = room.split(", ");
+            if (roomDetails[0].equals(hotelName)) {
+                int price = Integer.parseInt(roomDetails[14]); // Corrected index for price
+                if (price < lowestPrice) {
+                    lowestPrice = price;
+                }
+            }
+        }
+        return lowestPrice;
+    }
+
+    private static double calculateTotalPrice(int pricePerNight, String startDate, String endDate, int rooms) {
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+        long days = ChronoUnit.DAYS.between(start, end);
+        double totalPrice = pricePerNight * days * rooms;
+
+        if (start.getDayOfMonth() >= 5 && start.getDayOfMonth() <= 10) {
+            totalPrice *= 0.92; // 8% discount
+        } else if (start.getDayOfMonth() >= 10 && start.getDayOfMonth() <= 15) {
+            totalPrice *= 1.10; // 10% increase
+        } else if (end.getDayOfMonth() >= 25) {
+            totalPrice *= 1.15; // 15% increase
+        }
+
+        return totalPrice;
     }
 
     private static void validateInputs(String city, String accommodationType, String startDate, String endDate, int adults, int children, int rooms) {
@@ -183,33 +232,118 @@ public class Main {
                 Integer.parseInt(hotelDetails[7]) == rooms;
     }
 
-    private static int calculateDays(String startDate, String endDate) {
-        LocalDate start = LocalDate.parse(startDate);
-        LocalDate end = LocalDate.parse(endDate);
-        int days = (int) ChronoUnit.DAYS.between(start, end);
-        return days < 1 ? 1 : days;
-    }
+    private static void bookRoom() {
+        Scanner scanner = new Scanner(System.in);
 
-    private static int calculateTotalPrice(int days, int pricePerNight, int rooms) {
-        return days * pricePerNight * rooms;
-    }
+        System.out.println("Seleccione el nombre del hotel:");
+        for (int i = 0; i < availableHotels.size(); i++) {
+            String[] hotelDetails = availableHotels.get(i).split(", ");
+            System.out.println((i + 1) + ". " + hotelDetails[0]);
+        }
+        int hotelChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        String hotelName = availableHotels.get(hotelChoice - 1).split(", ")[0];
 
-    private static double calculateDiscountOrIncrease(String startDate, String endDate, int totalPrice) {
-        LocalDate start = LocalDate.parse(startDate);
-        LocalDate end = LocalDate.parse(endDate);
-        double discountOrIncrease = 0;
+        System.out.print("Ingrese la fecha de inicio (YYYY-MM-DD): ");
+        String startDate = scanner.nextLine();
 
-        if (end.getDayOfMonth() > 25) {
-            discountOrIncrease = totalPrice * 0.15;
-            totalPrice *= 1.15;
-        } else if (start.getDayOfMonth() <= 15 && end.getDayOfMonth() >= 10) {
-            discountOrIncrease = totalPrice * 0.10;
-            totalPrice *= 1.10;
-        } else if (start.getDayOfMonth() <= 10 && end.getDayOfMonth() >= 5) {
-            discountOrIncrease = totalPrice * 0.08;
-            totalPrice *= 0.92;
+        System.out.print("Ingrese la fecha de fin (YYYY-MM-DD): ");
+        String endDate = scanner.nextLine();
+
+        System.out.print("Ingrese el número de adultos: ");
+        int adults = scanner.nextInt();
+
+        System.out.print("Ingrese el número de niños: ");
+        int children = scanner.nextInt();
+
+        System.out.print("Ingrese el número de habitaciones: ");
+        int rooms = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        System.out.print("Ingrese su nombre: ");
+        String firstName = scanner.nextLine();
+
+        System.out.print("Ingrese su apellido: ");
+        String lastName = scanner.nextLine();
+
+        System.out.print("Ingrese su email: ");
+        String email = scanner.nextLine();
+
+        System.out.print("Ingrese su nacionalidad: ");
+        String nationality = scanner.nextLine();
+
+        System.out.print("Ingrese su número de teléfono: ");
+        String phoneNumber = scanner.nextLine();
+
+        System.out.print("Ingrese la hora aproximada de llegada (HH:MM): ");
+        String arrivalTime = scanner.nextLine();
+
+        // Actualizar la cantidad de habitaciones disponibles
+        for (int i = 0; i < availableHotels.size(); i++) {
+            String[] hotelDetails = availableHotels.get(i).split(", ");
+            if (hotelDetails[0].equals(hotelName)) {
+                int availableRooms = Integer.parseInt(hotelDetails[10]) - rooms;
+                hotelDetails[10] = String.valueOf(availableRooms);
+                availableHotels.set(i, String.join(", ", hotelDetails));
+                break;
+            }
         }
 
-        return discountOrIncrease;
+        System.out.println("Se ha realizado la reserva con éxito");
+    }
+
+    private static void confirmRooms() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Seleccione el nombre del hotel:");
+        for (int i = 0; i < availableHotels.size(); i++) {
+            String[] hotelDetails = availableHotels.get(i).split(", ");
+            System.out.println((i + 1) + ". " + hotelDetails[0]);
+        }
+        int hotelChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        String hotelName = availableHotels.get(hotelChoice - 1).split(", ")[0];
+
+        System.out.print("Ingrese la fecha de inicio (YYYY-MM-DD): ");
+        String startDate = scanner.nextLine();
+
+        System.out.print("Ingrese la fecha de fin (YYYY-MM-DD): ");
+        String endDate = scanner.nextLine();
+
+        System.out.print("Ingrese el número de adultos: ");
+        int adults = scanner.nextInt();
+
+        System.out.print("Ingrese el número de niños: ");
+        int children = scanner.nextInt();
+
+        System.out.print("Ingrese el número de habitaciones: ");
+        int rooms = scanner.nextInt();
+
+        List<String> availableRooms = confirmRooms(hotelName, startDate, endDate, adults, children, rooms);
+        if (!availableRooms.isEmpty()) {
+            System.out.println("Habitaciones disponibles:");
+            for (String room : availableRooms) {
+                System.out.println(room);
+            }
+        } else {
+            System.out.println("No hay habitaciones disponibles.");
+        }
+    }
+
+    public static List<String> confirmRooms(String hotelName, String startDate, String endDate, int adults, int children, int rooms) {
+        List<String> matchingRooms = new ArrayList<>();
+        for (String room : availableRooms) {
+            String[] roomDetails = room.split(", ");
+            if (roomDetails[0].equals(hotelName) &&
+                    roomDetails[1].equals(startDate) &&
+                    roomDetails[2].equals(endDate) &&
+                    Integer.parseInt(roomDetails[3]) == adults &&
+                    Integer.parseInt(roomDetails[4]) == children &&
+                    Integer.parseInt(roomDetails[5]) == rooms) {
+                matchingRooms.add(String.format("Tipo de habitación: %s, Características: %s, %s, %s, %s, %s, %s, Precio: %s",
+                        roomDetails[6], roomDetails[7], roomDetails[8], roomDetails[9], roomDetails[10], roomDetails[11], roomDetails[12], roomDetails[13]));
+            }
+        }
+        return matchingRooms;
     }
 }

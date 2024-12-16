@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 public class Main {
     private static final List<String> availableHotels = new ArrayList<>(Arrays.asList(
@@ -24,6 +23,8 @@ public class Main {
             "Hotel Madrid 1, 2023-12-01, 2023-12-10, 1, 2, 1, Habitación Suite, 1 cama king, vista al mar, aire acondicionado, cafetera, TV de pantalla plana, ducha, escritorio, 220"
     ));
 
+    private static final List<String> reservations = new ArrayList<>();
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
@@ -33,7 +34,9 @@ public class Main {
             System.out.println("1. Buscar hoteles");
             System.out.println("2. Reservar habitación");
             System.out.println("3. Confirmar habitaciones");
-            System.out.println("4. Salir");
+            System.out.println("4. Actualizar reserva");
+            System.out.println("5. Ver reservas");
+            System.out.println("6. Salir");
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
 
@@ -48,6 +51,12 @@ public class Main {
                     confirmRooms();
                     break;
                 case 4:
+                    updateReservation();
+                    break;
+                case 5:
+                    viewReservations();
+                    break;
+                case 6:
                     exit = true;
                     break;
                 default:
@@ -176,17 +185,19 @@ public class Main {
     }
 
     private static double calculateTotalPrice(int pricePerNight, String startDate, String endDate, int rooms) {
-        LocalDate start = LocalDate.parse(startDate);
-        LocalDate end = LocalDate.parse(endDate);
-        long days = ChronoUnit.DAYS.between(start, end);
+        long days = calculateDaysBetween(startDate, endDate); // Usamos el método manual
         double totalPrice = pricePerNight * days * rooms;
 
-        if (start.getDayOfMonth() >= 5 && start.getDayOfMonth() <= 10) {
-            totalPrice *= 0.92; // 8% discount
+        // Aplicar descuentos o aumentos según las fechas
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+
+        if (end.getDayOfMonth() >= 25) {
+            totalPrice *= 1.15; // Incremento del 15%
         } else if (start.getDayOfMonth() >= 10 && start.getDayOfMonth() <= 15) {
-            totalPrice *= 1.10; // 10% increase
-        } else if (end.getDayOfMonth() >= 25) {
-            totalPrice *= 1.15; // 15% increase
+            totalPrice *= 1.10; // Incremento del 10%
+        } else if (start.getDayOfMonth() >= 5 && start.getDayOfMonth() <= 10) {
+            totalPrice *= 0.92; // Descuento del 8%
         }
 
         return totalPrice;
@@ -275,6 +286,9 @@ public class Main {
         System.out.print("Ingrese su número de teléfono: ");
         String phoneNumber = scanner.nextLine();
 
+        System.out.print("Ingrese su fecha de nacimiento (YYYY-MM-DD): ");
+        String birthDate = scanner.nextLine();
+
         System.out.print("Ingrese la hora aproximada de llegada (HH:MM): ");
         String arrivalTime = scanner.nextLine();
 
@@ -288,6 +302,11 @@ public class Main {
                 break;
             }
         }
+
+        // Registrar la reserva
+        String reservation = String.format("Hotel: %s, Nombre: %s, Apellido: %s, Email: %s, Nacionalidad: %s, Teléfono: %s, Fecha de nacimiento: %s, Llegada: %s, Fecha inicio: %s, Fecha fin: %s, Adultos: %d, Niños: %d, Habitaciones: %d",
+                hotelName, firstName, lastName, email, nationality, phoneNumber, birthDate, arrivalTime, startDate, endDate, adults, children, rooms);
+        reservations.add(reservation);
 
         System.out.println("Se ha realizado la reserva con éxito");
     }
@@ -346,4 +365,146 @@ public class Main {
         }
         return matchingRooms;
     }
+
+    private static void updateReservation() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Ingrese su email: ");
+        String email = scanner.nextLine();
+
+        System.out.print("Ingrese su fecha de nacimiento (YYYY-MM-DD): ");
+        String birthDate = scanner.nextLine();
+
+        List<String> userReservations = new ArrayList<>();
+        for (String reservation : reservations) {
+            if (reservation.contains(email) && reservation.contains(birthDate)) {
+                userReservations.add(reservation);
+            }
+        }
+
+        if (userReservations.isEmpty()) {
+            System.out.println("No se encontraron reservas con los datos proporcionados.");
+            return;
+        }
+
+        System.out.println("Sus reservas:");
+        for (int i = 0; i < userReservations.size(); i++) {
+            System.out.println((i + 1) + ". " + userReservations.get(i));
+        }
+
+        System.out.print("Seleccione el número de la reserva que desea actualizar: ");
+        int reservationChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        if (reservationChoice < 1 || reservationChoice > userReservations.size()) {
+            System.out.println("Opción inválida.");
+            return;
+        }
+
+        String reservationToUpdate = userReservations.get(reservationChoice - 1);
+
+        System.out.println("¿Desea cambiar de habitación o de alojamiento?");
+        System.out.println("1. Cambiar de habitación");
+        System.out.println("2. Cambiar de alojamiento");
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        switch (choice) {
+            case 1:
+                changeRoom(scanner, reservationToUpdate);
+                break;
+            case 2:
+                changeAccommodation(scanner, reservationToUpdate);
+                break;
+            default:
+                System.out.println("Opción inválida.");
+        }
+    }
+
+    private static void changeRoom(Scanner scanner, String reservation) {
+        System.out.println("Seleccione el nuevo tipo de habitación:");
+        for (int i = 0; i < availableRooms.size(); i++) {
+            String[] roomDetails = availableRooms.get(i).split(", ");
+            System.out.println((i + 1) + ". " + roomDetails[6]);
+        }
+        int roomChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        String newRoom = availableRooms.get(roomChoice - 1).split(", ")[6];
+
+        // Actualizar la reserva
+        String updatedReservation = reservation.replaceFirst("Habitación: \\w+", "Habitación: " + newRoom);
+        reservations.set(reservations.indexOf(reservation), updatedReservation);
+
+        System.out.println("La reserva ha sido actualizada con éxito.");
+        System.out.println("Datos actualizados de la reserva:");
+        System.out.println(updatedReservation);
+    }
+
+    private static void changeAccommodation(Scanner scanner, String reservation) {
+        System.out.println("Seleccione el nuevo tipo de alojamiento:");
+        System.out.println("1. Hotel");
+        System.out.println("2. Apartamento");
+        System.out.println("3. Finca");
+        System.out.println("4. Dia de Sol");
+        int accommodationChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        String newAccommodation;
+        switch (accommodationChoice) {
+            case 1: newAccommodation = "Hotel"; break;
+            case 2: newAccommodation = "Apartamento"; break;
+            case 3: newAccommodation = "Finca"; break;
+            case 4: newAccommodation = "Dia de Sol"; break;
+            default:
+                System.out.println("Opción inválida.");
+                return;
+        }
+
+        // Actualizar la reserva
+        String updatedReservation = reservation.replaceFirst("Alojamiento: \\w+", "Alojamiento: " + newAccommodation);
+        reservations.set(reservations.indexOf(reservation), updatedReservation);
+
+        System.out.println("La reserva ha sido actualizada con éxito.");
+        System.out.println("Datos actualizados de la reserva:");
+        System.out.println(updatedReservation);
+    }
+
+    private static void viewReservations() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Ingrese su email: ");
+        String email = scanner.nextLine();
+
+        System.out.print("Ingrese su fecha de nacimiento (YYYY-MM-DD): ");
+        String birthDate = scanner.nextLine();
+
+        boolean found = false;
+        for (String reservation : reservations) {
+            if (reservation.contains(email) && reservation.contains(birthDate)) {
+                System.out.println("Datos de la reserva:");
+                System.out.println(reservation);
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No se encontraron reservas con los datos proporcionados.");
+        }
+    }
+
+    private static long calculateDaysBetween(String startDate, String endDate) {
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+
+        long days = 0;
+
+        // Usamos un bucle para incrementar los días hasta alcanzar la fecha final
+        while (!start.isEqual(end)) {
+            start = start.plusDays(1);
+            days++;
+        }
+
+        return days;
+    }
+
 }
